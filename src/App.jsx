@@ -22,19 +22,17 @@ const App = () => {
   //const [trendingMovies, setTrendingMovies] = useState([]);
 
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    fetchMovies(searchTerm);
+  }, [searchTerm]);
 
   const fetchMovies = async (query = '') => {
     setIsLoading(true);
     setErrorMessage('');
 
     try {
-      const base = API_BASE_URL.startsWith('http') ? API_BASE_URL : `https://${API_BASE_URL}`;
-      const endpoint = `${base}/discover/movie?sort_by=popularity.desc&api_key=${API_KEY}`;
-
-      console.log('fetch endpoint:', endpoint);
-      console.log('TMDB key present:', !!API_KEY);
+      const endpoint = query
+        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&api_key=${API_KEY}`
+        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&api_key=${API_KEY}`;
 
       const response = await fetch(endpoint, API_OPTIONS);
 
